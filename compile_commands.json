@@ -1,0 +1,7 @@
+[
+{
+  "directory": "C:/dev/MyGit/DX12Pactice/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang-cl.exe  /nologo -TP  -I..\\DX12Pactice -I..\\PUBLIC -I..\\DirectxMath\\Inc  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   -std:c++latest /Foc1\\CMakeFiles\\FloatingError.dir\\XM_FloatingError.cpp.obj /FdTARGET_COMPILE_PDB -c C:\\dev\\MyGit\\DX12Pactice\\c1\\XM_FloatingError.cpp",
+  "file": "C:/dev/MyGit/DX12Pactice/c1/XM_FloatingError.cpp"
+}
+]

@@ -1,0 +1,7 @@
+.vscode
+.clang-format
+**.obj
+**/CMakeFiles
+**/CMakeCache.txt
+build
+bin
