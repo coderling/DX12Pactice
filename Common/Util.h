@@ -3,6 +3,11 @@
 #include <string>
 #include <Windows.h>
 
+#include <dxgi1_6.h>
+#include "d3dx12.h"
+
+using namespace Microsoft::WRL;
+
 inline std::wstring AnsiToWString(const std::string& str)
 {
     WCHAR buffer[512];
@@ -35,3 +40,11 @@ class DxException
 #ifndef ReleaseCom
 #define ReleaseCom(x) { if(x){ x->Release(); x = 0; } }
 #endif
+
+ComPtr<ID3D12Resource> CreateDefaultBuffer(
+    ID3D12Device* device,
+    ID3D12GraphicsCommandList* command_list,
+    const void* init_data,
+    UINT64 byte_size,
+    ComPtr<ID3D12Resource>& upload_buffer
+);
