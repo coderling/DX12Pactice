@@ -1,5 +1,3 @@
-#pragma once
-
 #include "../Common/D3DApp.h"
 
 #include <DirectXColors.h>
