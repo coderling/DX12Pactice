@@ -33,6 +33,8 @@ class D3DApp
 
         void CalculateFrameStats();
 
+        float AspectRatio() const;
+
         ID3D12Resource* CurrentBackbuffer() const;
         D3D12_CPU_DESCRIPTOR_HANDLE CurrentBackbufferView() const;
         D3D12_CPU_DESCRIPTOR_HANDLE DepthStencilBufferView() const;
@@ -86,7 +88,7 @@ class D3DApp
 
         // back buffer 格式
         DXGI_FORMAT backbuffer_format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        DXGI_FORMAT depth_stcenil_format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        DXGI_FORMAT depth_stencil_format = DXGI_FORMAT_D24_UNORM_S8_UINT;
         int window_width = 800;
         int window_height = 600;
 

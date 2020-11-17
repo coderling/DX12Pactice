@@ -77,6 +77,11 @@ bool D3DApp::InitWindow()
     return true;
 }
 
+float D3DApp::AspectRatio() const
+{
+    return static_cast<float>(window_width) / window_height;
+}
+
 void D3DApp::OnResize()
 {
     assert(device);
@@ -127,7 +132,7 @@ void D3DApp::OnResize()
     depth_stencil_desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
     D3D12_CLEAR_VALUE opt_clear;
-    opt_clear.Format = depth_stcenil_format;
+    opt_clear.Format = depth_stencil_format;
     opt_clear.DepthStencil.Depth = 1.0f;
     opt_clear.DepthStencil.Stencil = 0;
     CD3DX12_HEAP_PROPERTIES properties(D3D12_HEAP_TYPE_DEFAULT);
@@ -140,7 +145,7 @@ void D3DApp::OnResize()
     D3D12_DEPTH_STENCIL_VIEW_DESC dsv_desc;
     dsv_desc.Flags = D3D12_DSV_FLAG_NONE;
     dsv_desc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-    dsv_desc.Format = depth_stcenil_format;
+    dsv_desc.Format = depth_stencil_format;
     dsv_desc.Texture2D.MipSlice = 0;
 
     device->CreateDepthStencilView(depth_stencil_buffer.Get(), &dsv_desc, DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart());

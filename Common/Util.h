@@ -2,8 +2,14 @@
 
 #include <string>
 #include <Windows.h>
+#include <iostream>
+#include <fstream>
+#include <unordered_map>
 
+#include <d3dcompiler.h>
 #include <dxgi1_6.h>
+#include <DirectXCollision.h>
+
 #include "d3dx12.h"
 
 using namespace Microsoft::WRL;
@@ -49,69 +55,69 @@ ComPtr<ID3D12Resource> CreateDefaultBuffer(
     ComPtr<ID3D12Resource>& upload_buffer
 );
 
-UINT CalcConstantBufferByteSize(UINT bytesize)
+UINT CalcConstantBufferByteSize(UINT bytesize);
+
+
+ComPtr<ID3DBlob> CompileShader(const std::wstring& filename,
+                               const D3D_SHADER_MACRO* defines,
+                               const std::string& entrypoint,
+                               const std::string& target);
+
+ComPtr<ID3DBlob> LoadBinary(const std::wstring& filename);
+
+//-----------------------------MeshGeometry--------------------------------
+struct SubmeshGeometry
 {
-    //256 倍数
-    return (bytesize + 255) & ~255;
-}
+    UINT index_count = 0;
+    UINT start_index_location = 0;
+    INT base_vertex_location =0;
 
-//------------------uploadbuffer helper class
-template<typename T>
-class UploadBuffer
+    DirectX::BoundingBox bounds;
+};
+
+struct MeshGeometry
 {
-    public:
-        UploadBuffer(ID3D12Device* device, UINT element_count, bool is_constant_buffer):
-        is_constant_buffer(is_constant_buffer)
-        {
-            element_bytesize = sizeof(T);
-            if(is_constant_buffer)
-            {
-                element_bytesize = CalcConstantBufferByteSize(sizeof(T));
-            }
+    std::string name;
 
-            const auto& heap_properties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-            const auto& resource_desc = CD3DX12_RESOURCE_DESC::Buffer(element_bytesize);
-            ThrowIfFailed(device->CreateCommittedResource(
-                &heap_properties,
-                D3D12_HEAP_FLAG_NONE,
-                &resource_desc,
-                D3D12_RESOURCE_STATE_GENERIC_READ,
-                nullptr,
-                IDD_PPV_ARGS(upload_buffer.GetAddressof())
-            ));
+    ComPtr<ID3DBlob> vertex_buffer_cpu = nullptr;
+    ComPtr<ID3DBlob> index_buffer_cpu = nullptr;
 
-            ThrowIfFailed(upload_buffer->Map(
-                0,
-                nullptr,
-                reinterpret_cast<void**>(&upload_buffer)
-            ));
-        }
+    ComPtr<ID3D12Resource> vertex_buffer_gpu = nullptr;
+    ComPtr<ID3D12Resource> index_buffer_gpu = nullptr;
 
-        UploadBuffer(const UploadBuffer& rhs) = delete;
-        UploadBuffer& operator=(const UploadBuffer& rhs) = delete;
+    ComPtr<ID3D12Resource> vertex_buffer_uploader = nullptr;
+    ComPtr<ID3D12Resource> index_buffer_uploader = nullptr;
 
-        ~UploadBuffer()
-        {
-            if(upload_buffer != nullptr)
-            {
-                upload_buffer->Unmap(0, nullptr);
-            }
+    UINT vertex_byte_stride = 0;
+    UINT vertex_buffer_bytesize = 0;
+    DXGI_FORMAT index_format = DXGI_FORMAT_R16_UINT;
+    UINT index_buffer_bytesize = 0;
 
-            mapped_data = nullptr;
-        }
+    std::unordered_map<std::string, SubmeshGeometry> drawargs;
 
-        ID3D12Resource* Resource() const
-        {
-            return upload_buffer.Get();
-        }
+    D3D12_VERTEX_BUFFER_VIEW VertexBufferView() const
+    {
+        D3D12_VERTEX_BUFFER_VIEW vbv;
+        vbv.BufferLocation = vertex_buffer_gpu->GetGPUVirtualAddress();
+        vbv.StrideInBytes = vertex_byte_stride;
+        vbv.SizeInBytes = vertex_buffer_bytesize;
 
-        void CopyData(int element_index, const T& data)
-        {
-            memcpy(&mapped_data[element_index * element_bytesize], &data, sizeof(T));
-        }
-    private:
-        ComPtr<ID3D12Resource> upload_buffer;
-        BYTE* mapped_data = nullptr;
-        UINT element_bytesize = 0;
-        bool is_constant_buffer = false;
+        return vbv;
+    }
+
+    D3D12_INDEX_BUFFER_VIEW IndexBufferView() const
+    {
+        D3D12_INDEX_BUFFER_VIEW ibv;
+        ibv.BufferLocation = index_buffer_gpu->GetGPUVirtualAddress();
+        ibv.Format = index_format;
+        ibv.SizeInBytes = index_buffer_bytesize;
+
+        return ibv;
+    }
+
+    void DisposeUploaders()
+    {
+        vertex_buffer_uploader = nullptr;
+        index_buffer_uploader = nullptr;
+    }
 };

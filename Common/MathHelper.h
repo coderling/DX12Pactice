@@ -45,6 +45,7 @@ public:
         return x < low ? low : (x > high ? high : x);
     }
 
+    //球坐标转换到笛卡尔坐标
     static DirectX::XMVECTOR SphericalToCartesian(float radius, float theta, float phi)
     {
         return DirectX::XMVectorSet(

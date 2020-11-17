@@ -18,7 +18,9 @@ include_directories(DX12Pactice PUBLIC ${PROJECT_SOURCE_DIR}/DirectxMath/Inc)
 set(common_sources
 ${CMAKE_CURRENT_SOURCE_DIR}/Common/D3DApp.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/Common/Util.cpp
-${CMAKE_CURRENT_SOURCE_DIR}/Common/GameTimer.cpp)
+${CMAKE_CURRENT_SOURCE_DIR}/Common/GameTimer.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/Common/MathHelper.cpp
+)
 
 set(d3d12_libs
 "d3d12.lib"
@@ -28,4 +30,5 @@ set(d3d12_libs
 
 add_subdirectory(c1)
 add_subdirectory(c4)
+add_subdirectory(c5)
 

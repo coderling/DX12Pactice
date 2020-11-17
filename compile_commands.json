@@ -27,5 +27,41 @@
   "directory": "C:/dev/MyGit/DX12Pactice/build",
   "command": "C:\\PROGRA~1\\LLVM\\bin\\clang-cl.exe  /nologo -TP -DUNICODE -D_UNICODE -I..\\DX12Pactice -I..\\PUBLIC -I..\\DirectxMath\\Inc  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   -std:c++latest /Foc4\\CMakeFiles\\C4_InitializeApp.dir\\__\\Common\\GameTimer.cpp.obj /FdTARGET_COMPILE_PDB -c C:\\dev\\MyGit\\DX12Pactice\\Common\\GameTimer.cpp",
   "file": "C:/dev/MyGit/DX12Pactice/Common/GameTimer.cpp"
+},
+
+{
+  "directory": "C:/dev/MyGit/DX12Pactice/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang-cl.exe  /nologo -TP -DUNICODE -D_UNICODE -I..\\DX12Pactice -I..\\PUBLIC -I..\\DirectxMath\\Inc  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   -std:c++latest /Foc4\\CMakeFiles\\C4_InitializeApp.dir\\__\\Common\\MathHelper.cpp.obj /FdTARGET_COMPILE_PDB -c C:\\dev\\MyGit\\DX12Pactice\\Common\\MathHelper.cpp",
+  "file": "C:/dev/MyGit/DX12Pactice/Common/MathHelper.cpp"
+},
+
+{
+  "directory": "C:/dev/MyGit/DX12Pactice/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang-cl.exe  /nologo -TP -DUNICODE -D_UNICODE -I..\\DX12Pactice -I..\\PUBLIC -I..\\DirectxMath\\Inc  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   -std:c++latest /Foc5\\CMakeFiles\\C5_BOX3D.dir\\Box3D.cpp.obj /FdTARGET_COMPILE_PDB -c C:\\dev\\MyGit\\DX12Pactice\\c5\\Box3D.cpp",
+  "file": "C:/dev/MyGit/DX12Pactice/c5/Box3D.cpp"
+},
+
+{
+  "directory": "C:/dev/MyGit/DX12Pactice/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang-cl.exe  /nologo -TP -DUNICODE -D_UNICODE -I..\\DX12Pactice -I..\\PUBLIC -I..\\DirectxMath\\Inc  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   -std:c++latest /Foc5\\CMakeFiles\\C5_BOX3D.dir\\__\\Common\\D3DApp.cpp.obj /FdTARGET_COMPILE_PDB -c C:\\dev\\MyGit\\DX12Pactice\\Common\\D3DApp.cpp",
+  "file": "C:/dev/MyGit/DX12Pactice/Common/D3DApp.cpp"
+},
+
+{
+  "directory": "C:/dev/MyGit/DX12Pactice/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang-cl.exe  /nologo -TP -DUNICODE -D_UNICODE -I..\\DX12Pactice -I..\\PUBLIC -I..\\DirectxMath\\Inc  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   -std:c++latest /Foc5\\CMakeFiles\\C5_BOX3D.dir\\__\\Common\\Util.cpp.obj /FdTARGET_COMPILE_PDB -c C:\\dev\\MyGit\\DX12Pactice\\Common\\Util.cpp",
+  "file": "C:/dev/MyGit/DX12Pactice/Common/Util.cpp"
+},
+
+{
+  "directory": "C:/dev/MyGit/DX12Pactice/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang-cl.exe  /nologo -TP -DUNICODE -D_UNICODE -I..\\DX12Pactice -I..\\PUBLIC -I..\\DirectxMath\\Inc  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   -std:c++latest /Foc5\\CMakeFiles\\C5_BOX3D.dir\\__\\Common\\GameTimer.cpp.obj /FdTARGET_COMPILE_PDB -c C:\\dev\\MyGit\\DX12Pactice\\Common\\GameTimer.cpp",
+  "file": "C:/dev/MyGit/DX12Pactice/Common/GameTimer.cpp"
+},
+
+{
+  "directory": "C:/dev/MyGit/DX12Pactice/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang-cl.exe  /nologo -TP -DUNICODE -D_UNICODE -I..\\DX12Pactice -I..\\PUBLIC -I..\\DirectxMath\\Inc  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   -std:c++latest /Foc5\\CMakeFiles\\C5_BOX3D.dir\\__\\Common\\MathHelper.cpp.obj /FdTARGET_COMPILE_PDB -c C:\\dev\\MyGit\\DX12Pactice\\Common\\MathHelper.cpp",
+  "file": "C:/dev/MyGit/DX12Pactice/Common/MathHelper.cpp"
 }
 ]
