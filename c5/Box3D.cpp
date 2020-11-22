@@ -9,15 +9,20 @@
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-struct Vertex
+struct VPositionData
 {
     XMFLOAT3 pos;
+};
+
+struct VColorData
+{
     XMFLOAT4 color;
 };
 
 struct ObjectConstants
 {
     XMFLOAT4X4 world_view_proj = MathHelper::Identity4x4();
+    float gtime;
 };
 
 class Box3D : public D3DApp
@@ -127,6 +132,7 @@ void Box3D::Update()
 
     ObjectConstants objconstants;
     XMStoreFloat4x4(&objconstants.world_view_proj, XMMatrixTranspose(world_view_proj));
+    objconstants.gtime = timer.TotalTime();
     object_upload_buffer->CopyData(0, objconstants);
 }
 
@@ -175,8 +181,9 @@ void Box3D::Draw()
     // rootsignature 设置shader所需资源信息
     command_list->SetGraphicsRootSignature(root_signature.Get());
 
-    const auto& vertex_buffer_view = box_geometry->VertexBufferView();
-    command_list->IASetVertexBuffers(0, 1, &vertex_buffer_view);
+    D3D12_VERTEX_BUFFER_VIEW views[2];
+    box_geometry->VertexBufferView(views);
+    command_list->IASetVertexBuffers(0, 2, views); 
     const auto& index_buffer_view = box_geometry->IndexBufferView();
     command_list->IASetIndexBuffer(&index_buffer_view);
     command_list->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -328,7 +335,7 @@ void Box3D::BuildShaderAndInputLayout()
     
     input_layouts = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
     };
 }
 
@@ -347,6 +354,8 @@ void Box3D::BuildPSO()
     pso_desc.PS.BytecodeLength = mps_bytecode->GetBufferSize();
 
     pso_desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    //pso_desc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+    //pso_desc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
     pso_desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
     pso_desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
     pso_desc.SampleMask = UINT_MAX;
@@ -366,15 +375,26 @@ void Box3D::BuildPSO()
 
 void Box3D::BuildBoxGeometry()
 {
-    std::array<Vertex, 8> vertices = {
-        Vertex({XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White)}),
-        Vertex({XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black)}),
-        Vertex({XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red)}),
-        Vertex({XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green)}),
-        Vertex({XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue)}),
-        Vertex({XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow)}),
-        Vertex({XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan)}),
-        Vertex({XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta)})
+    std::array<VPositionData, 8> vertices = {
+        VPositionData({XMFLOAT3(-1.0f, -1.0f, -1.0f)}), 
+        VPositionData({XMFLOAT3(-1.0f, +1.0f, -1.0f)}), 
+        VPositionData({XMFLOAT3(+1.0f, +1.0f, -1.0f)}), 
+        VPositionData({XMFLOAT3(+1.0f, -1.0f, -1.0f)}), 
+        VPositionData({XMFLOAT3(-1.0f, -1.0f, +1.0f)}), 
+        VPositionData({XMFLOAT3(-1.0f, +1.0f, +1.0f)}), 
+        VPositionData({XMFLOAT3(+1.0f, +1.0f, +1.0f)}), 
+        VPositionData({XMFLOAT3(+1.0f, -1.0f, +1.0f)})
+    };
+
+    std::array<VColorData, 8> colors = {
+        VColorData({XMFLOAT4(Colors::White)}),
+        VColorData({XMFLOAT4(Colors::Black)}),
+        VColorData({XMFLOAT4(Colors::Red)}),
+        VColorData({XMFLOAT4(Colors::Green)}),
+        VColorData({XMFLOAT4(Colors::Blue)}),
+        VColorData({XMFLOAT4(Colors::Yellow)}),
+        VColorData({XMFLOAT4(Colors::Cyan)}),
+        VColorData({XMFLOAT4(Colors::Magenta)})
     };
 
     std::array<std::uint16_t, 36> indices = {
@@ -403,7 +423,8 @@ void Box3D::BuildBoxGeometry()
 		4, 3, 7
     };
 
-    const UINT vb_bytesize = (UINT)vertices.size() * sizeof(Vertex);
+    const UINT vb_bytesize = (UINT)vertices.size() * sizeof(VPositionData);
+    const UINT vb_color_bytesize = (UINT)colors.size() * sizeof(VColorData);
     const UINT ib_bytesize = (UINT)indices.size() * sizeof(std::uint16_t);
 
     box_geometry = std::make_unique<MeshGeometry>();
@@ -411,15 +432,21 @@ void Box3D::BuildBoxGeometry()
 
     ThrowIfFailed(D3DCreateBlob(vb_bytesize, box_geometry->vertex_buffer_cpu.GetAddressOf()));
     CopyMemory(box_geometry->vertex_buffer_cpu->GetBufferPointer(), vertices.data(), vb_bytesize);
+    
+    ThrowIfFailed(D3DCreateBlob(vb_color_bytesize, box_geometry->vertex_color_buffer_cpu.GetAddressOf()));
+    CopyMemory(box_geometry->vertex_color_buffer_cpu->GetBufferPointer(), colors.data(), vb_color_bytesize);
 
     ThrowIfFailed(D3DCreateBlob(ib_bytesize, box_geometry->index_buffer_cpu.GetAddressOf()));
     CopyMemory(box_geometry->index_buffer_cpu->GetBufferPointer(), indices.data(), ib_bytesize);
 
     box_geometry->vertex_buffer_gpu = CreateDefaultBuffer(device.Get(), command_list.Get(), vertices.data(), vb_bytesize, box_geometry->vertex_buffer_uploader);
+    box_geometry->vertex_color_buffer_gpu = CreateDefaultBuffer(device.Get(), command_list.Get(), colors.data(), vb_color_bytesize, box_geometry->vertex_buffer_uploader);
     box_geometry->index_buffer_gpu = CreateDefaultBuffer(device.Get(), command_list.Get(), indices.data(), ib_bytesize, box_geometry->index_buffer_uploader);
 
-    box_geometry->vertex_byte_stride = sizeof(Vertex);
+    box_geometry->vertex_byte_stride = sizeof(VPositionData);
+    box_geometry->vertex_color_byte_stride= sizeof(VColorData);
     box_geometry->vertex_buffer_bytesize = vb_bytesize;
+    box_geometry->vertex_color_byte_stride = vb_color_bytesize;
     box_geometry->index_format = DXGI_FORMAT_R16_UINT;
     box_geometry->index_buffer_bytesize = ib_bytesize;
 

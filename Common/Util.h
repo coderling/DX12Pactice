@@ -80,9 +80,11 @@ struct MeshGeometry
     std::string name;
 
     ComPtr<ID3DBlob> vertex_buffer_cpu = nullptr;
+    ComPtr<ID3DBlob> vertex_color_buffer_cpu = nullptr;
     ComPtr<ID3DBlob> index_buffer_cpu = nullptr;
 
     ComPtr<ID3D12Resource> vertex_buffer_gpu = nullptr;
+    ComPtr<ID3D12Resource> vertex_color_buffer_gpu = nullptr;
     ComPtr<ID3D12Resource> index_buffer_gpu = nullptr;
 
     ComPtr<ID3D12Resource> vertex_buffer_uploader = nullptr;
@@ -90,19 +92,21 @@ struct MeshGeometry
 
     UINT vertex_byte_stride = 0;
     UINT vertex_buffer_bytesize = 0;
+    UINT vertex_color_byte_stride = 0;
+    UINT vertex_color_buffer_bytesize = 0;
     DXGI_FORMAT index_format = DXGI_FORMAT_R16_UINT;
     UINT index_buffer_bytesize = 0;
 
     std::unordered_map<std::string, SubmeshGeometry> drawargs;
 
-    D3D12_VERTEX_BUFFER_VIEW VertexBufferView() const
+    void VertexBufferView(D3D12_VERTEX_BUFFER_VIEW views[2]) const
     {
-        D3D12_VERTEX_BUFFER_VIEW vbv;
-        vbv.BufferLocation = vertex_buffer_gpu->GetGPUVirtualAddress();
-        vbv.StrideInBytes = vertex_byte_stride;
-        vbv.SizeInBytes = vertex_buffer_bytesize;
-
-        return vbv;
+        views[0].BufferLocation = vertex_buffer_gpu->GetGPUVirtualAddress();
+        views[0].StrideInBytes = vertex_byte_stride;
+        views[0].SizeInBytes = vertex_buffer_bytesize;
+        views[1].BufferLocation = vertex_color_buffer_gpu->GetGPUVirtualAddress();
+        views[1].StrideInBytes = vertex_color_byte_stride;
+        views[1].SizeInBytes = vertex_color_buffer_bytesize;
     }
 
     D3D12_INDEX_BUFFER_VIEW IndexBufferView() const

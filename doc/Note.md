@@ -13,5 +13,5 @@
 9. ID3D12DescriptorHeap Descriptor/resource view 资源描述保存的地方
 10. ID3D12RootSignature shader需要的资源描述
 11. ID3DBlob 资源内存块
-12. D3D12_INPUT_ELEMENT_DESC
-13. ID3D12PipelineState pipelinestate  objet
+12. D3D12_INPUT_ELEMENT_DESC shader结构体的结构
+13. ID3D12PipelineState pipelinestate  objet  
