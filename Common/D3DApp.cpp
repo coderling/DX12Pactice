@@ -131,6 +131,7 @@ void D3DApp::OnResize()
     depth_stencil_desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
     depth_stencil_desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
+    //创建资源depth/stencil buffer资源
     D3D12_CLEAR_VALUE opt_clear;
     opt_clear.Format = depth_stencil_format;
     opt_clear.DepthStencil.Depth = 1.0f;
@@ -141,7 +142,7 @@ void D3DApp::OnResize()
                           D3D12_HEAP_FLAG_NONE,
                           &depth_stencil_desc, D3D12_RESOURCE_STATE_COMMON, &opt_clear, IID_PPV_ARGS(depth_stencil_buffer.GetAddressOf())));
 
-    // depth stencil view
+    //创建 depth stencil descriptor
     D3D12_DEPTH_STENCIL_VIEW_DESC dsv_desc;
     dsv_desc.Flags = D3D12_DSV_FLAG_NONE;
     dsv_desc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
@@ -150,7 +151,7 @@ void D3DApp::OnResize()
 
     device->CreateDepthStencilView(depth_stencil_buffer.Get(), &dsv_desc, DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-    // 通知GPU同步资源状态
+    // 转换depth stencil buffer状态到可写
     auto trans = CD3DX12_RESOURCE_BARRIER::Transition(depth_stencil_buffer.Get(),
                                  D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE);
     command_list->ResourceBarrier(1, &trans);
